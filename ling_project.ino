@@ -1,10 +1,17 @@
 #include "pitches.h"
+#include <Adafruit_SSD1306.h>
+#include <splash.h>
 
 #define relayPin 2
 
+#define displayModePin 7
 #define selectorPin 10
 #define triggerPin 11
 #define buzzerPin 12
+
+#define width 128 //* OLED display width,  in pixels
+#define height 64 //* OLED display height, in pixels
+Adafruit_SSD1306 oled(width, height, &Wire, -1);
 
 //* GLOBALS
 const bool showStats = false; //? Log or not stuff (Serial)
@@ -17,6 +24,8 @@ const int dwell = 25;        //? ms, duration of each shot
 bool triggerReleased = true; //? Used to detect press and hold
 
 //* CONFIGURATION (user editable)
+int displayMode = false; //? false = HUD, true = Crosshair
+
 unsigned long gameDuration = 30000; //? ms, game duration
 int mode = 1;
 //? 0 SAFE
@@ -61,6 +70,44 @@ void loop()
 {
     const bool triggered = digitalRead(triggerPin);        //? Allow both manual and photo stuff detection
     const bool selectorChanged = digitalRead(selectorPin); //? Toggle between modes (button)
+    const bool displayChanged = digitalRead(displayModePin);
+
+    if (displayChanged)
+    {
+        displayMode = !displayMode;
+    }
+
+    if (displayChanged)
+    {
+        //? Only draw the crosshair once when the display mode is changed
+        if (displayMode)
+        {
+            markop_setup();
+        }
+        else
+        {
+
+            oled_setup();
+            gyro_setup();
+        }
+    }
+
+    //? Draw the HUD at each loop
+    if (!displayMode)
+    {
+        if (selectorChanged)
+        {
+            handleSelector();
+        }
+
+        if (triggered)
+        {
+            handleTrigger();
+        }
+
+        drawGyro();
+        drawTimer();
+    }
 
     //? Resets the press and hold detection once the trigger is released
     if (!triggered && !triggerReleased)
@@ -79,17 +126,4 @@ void loop()
 
         cln();
     }
-
-    if (selectorChanged)
-    {
-        handleSelector();
-    }
-
-    if (triggered)
-    {
-        handleTrigger();
-    }
-
-    drawGyro();
-    drawTimer();
 }

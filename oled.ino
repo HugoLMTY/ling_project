@@ -1,6 +1,3 @@
-#include <Adafruit_SSD1306.h>
-#include <splash.h>
-
 /*
    ? AXIS / DIMENSIONS
    *           Y
@@ -28,11 +25,6 @@
   oled.drawBitmap(startX, startY, bitmap, bitmap_height, bitmap_width, WHITE);
    ?
 */
-
-#define width 128 //* OLED display width,  in pixels
-#define height 64 //* OLED display height, in pixels
-
-Adafruit_SSD1306 oled(width, height, &Wire, -1);
 
 //? --- CONFIG
 
