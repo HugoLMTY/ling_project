@@ -1,7 +1,5 @@
-void handleTrigger()
-{
-    switch (mode)
-    {
+void handleTrigger() {
+    switch (mode) {
 
     //* SAFE
     case 0:
@@ -10,8 +8,7 @@ void handleTrigger()
 
     //* SEMI
     case 1:
-        if (triggerReleased)
-        {
+        if (triggerReleased) {
             triggerReleased = false;
             shoot();
         }
@@ -20,18 +17,15 @@ void handleTrigger()
     //* BURST
     case 2:
         //? If the trigger is already pressed and the auto burst is disabled, returns
-        if (!triggerReleased && !allowBurstAuto)
-        {
+        if (!triggerReleased && !allowBurstAuto) {
             return;
         }
 
-        if (triggerReleased && !allowBurstAuto)
-        {
+        if (triggerReleased && !allowBurstAuto) {
             triggerReleased = false;
         }
 
-        for (int i = 0; i < burstLength; i++)
-        {
+        for (int i = 0; i < burstLength; i++) {
             shoot();
             delay(interval / 2);
         }
@@ -44,9 +38,7 @@ void handleTrigger()
     }
 }
 
-void shoot()
-{
-
+void shoot() {
     //? Shoot action
     digitalWrite(relayPin, HIGH);
     delay(dwell);

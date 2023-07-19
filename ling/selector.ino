@@ -1,14 +1,11 @@
 unsigned long selectorDebounce[2] = {50, 0}; //? Debounce time, last time
 
-void handleSelector()
-{
-    if (selectorDebounce[1] > millis())
-    {
+void handleSelector() {
+    if (selectorDebounce[1] > millis()) {
         return;
     }
 
-    switch (mode)
-    {
+    switch (mode) {
     //* TO SAFE
     case 3:
         mode = 0;
@@ -40,8 +37,7 @@ void handleSelector()
         break;
     }
 
-    if (showStats)
-    {
+    if (showStats) {
         clog("Mode", mode);
         cln();
     }

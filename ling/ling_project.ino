@@ -37,55 +37,49 @@ int interval = 15;           //? ms, interval between shoots
 int burstLength = 3;         //? number of firing each burst
 bool allowBurstAuto = false; //? self explain; remove press and hold detection
 //* Logs a title and it's value, very ez + beautiful spacer
-void clog(String title, int val, bool spacer = false)
-{
+void clog(String title, int val, bool spacer = false) {
     Serial.print(title);
     Serial.print(": ");
     Serial.print(val);
 
-    if (spacer)
-    {
+    if (spacer) {
         Serial.print(" - ");
     }
 }
-void cln()
-{
+void cln() {
     Serial.println();
 }
 
-void setup()
-{
+void setup() {
     Serial.begin(9600);
     pinMode(relayPin, OUTPUT);
 
     start = millis();
 
-    oled_setup();
-    gyro_setup();
+    if (displayMode) {
+        markop_setup();
+    } else {
+        oled_setup();
+        gyro_setup();
+    }
 
     tone(buzzerPin, melody[7], 100);
 }
 
-void loop()
-{
+void loop() {
     const bool triggered = digitalRead(triggerPin);        //? Allow both manual and photo stuff detection
     const bool selectorChanged = digitalRead(selectorPin); //? Toggle between modes (button)
     const bool displayChanged = digitalRead(displayModePin);
 
-    if (displayChanged)
-    {
+    if (displayChanged) {
         displayMode = !displayMode;
     }
 
-    if (displayChanged)
-    {
+    if (displayChanged) {
         //? Only draw the crosshair once when the display mode is changed
-        if (displayMode)
-        {
+        if (displayMode) {
             markop_setup();
-        }
-        else
-        {
+        } else {
 
             oled_setup();
             gyro_setup();
@@ -93,15 +87,12 @@ void loop()
     }
 
     //? Draw the HUD at each loop
-    if (!displayMode)
-    {
-        if (selectorChanged)
-        {
+    if (!displayMode) {
+        if (selectorChanged) {
             handleSelector();
         }
 
-        if (triggered)
-        {
+        if (triggered) {
             handleTrigger();
         }
 
@@ -110,14 +101,12 @@ void loop()
     }
 
     //? Resets the press and hold detection once the trigger is released
-    if (!triggered && !triggerReleased)
-    {
+    if (!triggered && !triggerReleased) {
         triggerReleased = true;
     }
 
     //? Logs some stuff
-    if (showStats)
-    {
+    if (showStats) {
         const int msPerShot = ((dwell + interval) * burstLength) + interval;
         const double cps = (double)1000 / msPerShot;
         clog("Total ms", msPerShot, true);

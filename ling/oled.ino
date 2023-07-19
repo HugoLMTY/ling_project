@@ -83,15 +83,12 @@ const int timerPos[2] = {1, 1};
 const int timerSize[2] = {fontSizes[textSize] * 5, 5};
 const int timerOffset[2] = {0, 0};
 
-void oled_setup()
-{
-    if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C))
-    { // initialize OLED display with address 0x3C for 128x64
+void oled_setup() {
+    if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // initialize OLED display with address 0x3C for 128x64
         Serial.println(F("SSD1306 allocation failed"));
     }
 
-    if (showNerdStuff)
-    {
+    if (showNerdStuff) {
         Serial.print("OLED Width: ");
         Serial.print(width);
         Serial.print(" - OLED Height: ");
@@ -107,8 +104,7 @@ void oled_setup()
     delay(500);
     oled.clearDisplay();
 
-    for (int i = 0; i <= moduleWidth; i += moduleWidth / transitionFrames)
-    {
+    for (int i = 0; i <= moduleWidth; i += moduleWidth / transitionFrames) {
         //? X
         oled.drawLine(moduleWidth, moduleHeight, moduleWidth + i, moduleHeight, WHITE);
         oled.drawLine(moduleWidth - i, moduleHeight, moduleWidth, moduleHeight, WHITE);
@@ -121,10 +117,8 @@ void oled_setup()
     }
     delay(100);
 
-    if (!showGrid)
-    {
-        for (float i = 0; i <= 1; i += 0.1)
-        {
+    if (!showGrid) {
+        for (float i = 0; i <= 1; i += 0.1) {
             oled.fillCircle(moduleWidth, moduleHeight, moduleWidth * i * 1.1, BLACK);
             oled.display();
             delay(25);
@@ -134,8 +128,7 @@ void oled_setup()
         oled.display();
     }
 
-    if (showDeepGrid)
-    {
+    if (showDeepGrid) {
         //? 1/4
         oled.drawLine(0, height / 4, width, height / 4, WHITE);
         oled.drawLine(width / 4, 0, width / 4, height, WHITE);
@@ -159,23 +152,19 @@ void oled_setup()
     // oled.drawCircle(CenterX, CenterY, Radius, WHITE);
 }
 
-void oled_loop()
-{
+void oled_loop() {
     drawSelector();
     delay(transitionDuration * 2);
     drawMagazine();
 
-    if (ammos == 0)
-    {
+    if (ammos == 0) {
         selectModule(1, 0);
         delay(2000);
         unselectModule(1, 0);
     }
 
-    if (showModules)
-    {
-        switch (mode)
-        {
+    if (showModules) {
+        switch (mode) {
         case 1:
             shoot();
             delay(500);
@@ -188,34 +177,28 @@ void oled_loop()
             break;
 
         case 2:
-            for (int b = 0; b < 3; b++)
-            {
+            for (int b = 0; b < 3; b++) {
                 shoot();
             }
 
             delay(500);
 
-            for (int b = 0; b < 3; b++)
-            {
+            for (int b = 0; b < 3; b++) {
                 shoot();
             }
             break;
 
         case 3:
-            for (int b = 0; b < 10; b++)
-            {
+            for (int b = 0; b < 10; b++) {
                 shoot();
             }
             break;
         }
 
         delay(2000);
-        if (mode >= 3)
-        {
+        if (mode >= 3) {
             mode = 0;
-        }
-        else
-        {
+        } else {
             mode++;
         }
         clearPos(0, 0);
@@ -225,8 +208,7 @@ void oled_loop()
     delay(500);
 }
 
-void selectModule(int posX, int posY)
-{
+void selectModule(int posX, int posY) {
     const int startX = moduleWidth * posX + moduleMargin;
     const int startY = moduleHeight * posY + moduleMargin;
 
@@ -236,16 +218,13 @@ void selectModule(int posX, int posY)
     oled.drawRoundRect(startX, startY, mWidth, mHeight, 3, WHITE);
     oled.display();
 }
-void unselectModule(int posX, int posY)
-{
+void unselectModule(int posX, int posY) {
     oled.drawRect(moduleWidth * posX, moduleHeight * posY, moduleWidth * posX, moduleHeight - (moduleHeight * posY), BLACK);
     oled.display();
 }
 
-void clearPos(int posX, int posY)
-{
-    for (float i = 0; i <= 1; i += 0.1)
-    {
+void clearPos(int posX, int posY) {
+    for (float i = 0; i <= 1; i += 0.1) {
         int startX = (moduleWidth * posX) + moduleMargin + 1;
         int startY = (moduleHeight * posY) + moduleMargin + 1;
 
@@ -259,8 +238,7 @@ void clearPos(int posX, int posY)
     delay(transitionDuration);
 }
 
-void oled_shoot()
-{
+void oled_shoot() {
     //? Borders to show the shot
     oled.drawRect(0, 0, width, height, WHITE);
     oled.display();
@@ -280,8 +258,7 @@ void oled_shoot()
     oled.display();
 }
 
-void drawTimer()
-{
+void drawTimer() {
     const int start[2] = {
         (width * ((float)timerOffset[0] / (float)100)) + (moduleWidth * timerPos[0]) + moduleWidth / 2,
         (height * ((float)timerOffset[1] / (float)100)) + (moduleHeight * timerPos[1]) + moduleHeight / 2};
@@ -312,8 +289,7 @@ void drawTimer()
     // oled.display();
 }
 
-void drawGyro()
-{
+void drawGyro() {
     const int start[2] = {
         (width * ((float)gyroOffset[0] / (float)100)) + (moduleWidth * gyroPos[0]) + moduleWidth / 2,
         (height * ((float)gyroOffset[1] / (float)100)) + (moduleHeight * gyroPos[1]) + moduleHeight / 2};
@@ -335,8 +311,7 @@ void drawGyro()
     delay(50);
 }
 
-void drawMagazine()
-{
+void drawMagazine() {
     const int start[2] = {//? pixels, x / y
                           (width * ((float)magazineOffset[0] / (float)100)) + (moduleWidth * magazinePos[0]),
                           (height * ((float)magazineOffset[1] / (float)100)) + (moduleHeight * magazinePos[1])};
@@ -409,8 +384,7 @@ void drawMagazine()
     oled.display();
 }
 
-void drawSelector()
-{
+void drawSelector() {
     const int start[2] = {
         (width * ((float)selectorOffset[0] / (float)100)) + (moduleWidth * selectorPos[0]),
         (height * ((float)selectorOffset[1] / (float)100)) + (moduleHeight * selectorPos[1]) + 1};
@@ -454,8 +428,8 @@ void drawSelector()
     //? 1 SEMI
     //? 2 BURST
     //? 3 AUTO
-    switch (mode)
-    {
+    // very useful documentation 11/10
+    switch (mode) {
     case 0:
         oled.println("SAFE");
         break;

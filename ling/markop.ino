@@ -20,12 +20,10 @@
 
 const int outlineRadius = (height / 2) - 4;
 
-void markop_setup()
-{
+void markop_setup() {
     Serial.begin(9600);
 
-    if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C))
-    { // initialize OLED display with address 0x3C for 128x64
+    if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // initialize OLED display with address 0x3C for 128x64
         Serial.println("SSD1306 allocation failed");
     }
 
@@ -42,22 +40,18 @@ void markop_setup()
     drawCrosshair();
 }
 
-void markop_loop()
-{
+void markop_loop() {
 }
 
-void drawCrosshair()
-{
+void drawCrosshair() {
     drawGrid();
     drawOutline();
     drawCenter();
     drawDistanceStuff();
 }
 
-void drawGrid()
-{
-    for (float i = 0; i < 1; i += 0.05)
-    {
+void drawGrid() {
+    for (float i = 0; i < 1; i += 0.05) {
         oled.drawLine(width / 2, height / 2, width / 2 + ((width / 2) * i), height / 2, WHITE);
         oled.drawLine(width / 2, height / 2, width / 2 - ((width / 2) * i), height / 2, WHITE);
 
@@ -68,30 +62,24 @@ void drawGrid()
     }
 }
 
-void drawOutline()
-{
+void drawOutline() {
     int radius;
     bool dotted = true;
-    for (float i = 0; i < 1; i += 0.05)
-    {
+    for (float i = 0; i < 1; i += 0.05) {
 
         int currentRadius = outlineRadius * i;
 
         oled.drawCircle(width / 2, height / 2, currentRadius, WHITE);
 
-        if (!dotted)
-        {
+        if (!dotted) {
             oled.drawCircle(width / 2, height / 2, radius, BLACK);
         }
 
         radius = currentRadius;
 
-        if (i > (float)0.8)
-        {
+        if (i > (float)0.8) {
             dotted = !dotted;
-        }
-        else
-        {
+        } else {
             dotted = false;
         }
 
@@ -100,8 +88,7 @@ void drawOutline()
     }
 }
 
-void drawDistanceStuff()
-{
+void drawDistanceStuff() {
     const int start[2] = {width / 2 - outlineRadius, height / 2 - outlineRadius};
     const int center[2] = {start[0] + outlineRadius, start[1] + outlineRadius};
     const int _end[2] = {center[0] + outlineRadius, center[1] + outlineRadius};
@@ -110,8 +97,7 @@ void drawDistanceStuff()
     const int markOffset = 6;
     const int markSize = 2;
 
-    for (int mark = 1; mark < marks; mark++)
-    {
+    for (int mark = 1; mark < marks; mark++) {
         oled.drawLine(center[0], center[1] + (mark * markOffset), center[0] + ((marks - mark) * markSize), center[1] + (mark * markOffset), WHITE);
         oled.drawLine(center[0], center[1] + (mark * markOffset), center[0] - ((marks - mark) * markSize), center[1] + (mark * markOffset), WHITE);
 
@@ -120,13 +106,11 @@ void drawDistanceStuff()
     }
 }
 
-void drawCenter()
-{
+void drawCenter() {
     const int start = width / 2 - outlineRadius;
     const int __end = start + (outlineRadius * 2);
 
-    for (float i = 0; i < 0.5; i += 0.05)
-    {
+    for (float i = 0; i < 0.5; i += 0.05) {
 
         oled.drawLine(__end, height / 2, __end - outlineRadius * i, height / 2, WHITE);
         oled.drawLine(start, height / 2, start + outlineRadius * i, height / 2, WHITE);
